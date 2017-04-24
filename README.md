@@ -3,7 +3,7 @@
 Der c't-Bot ist ein Roboter Projekt der Zeitschrift c't aus dem Jahre 2006. 
 Da mir der Einstieg mit der Original Software für Einsteiger als zu hoch erscheint, starte ich hier von vorne Schritt für Schritt auf Arduino Basis.
 
-[![ct-Bot](https://github.com/robotfreak/ct-bot/raw/master/wiki/images/ctbot3.jpg)
+![ct-Bot](https://github.com/robotfreak/ct-bot/raw/master/wiki/images/ctbot3.jpg)
 
 ## Benötigte Hard- und Software
 
