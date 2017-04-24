@@ -8,14 +8,14 @@ Da mir der Einstieg der Original Software für Einsteiger als zu hoch erscheint,
 * c't-Bot (bei Segor nicht mehr erhältlich!)
 * ISP Programmer oder Arduino Board
 * USB seriell Wandler (FTDI-Kabel o.ä)
-* Arduino IDE mind. v1.6.x arduino.cc/downloads
+* Arduino IDE mind. v1.6.x https://www.arduino.cc/en/Main/Software
 * Arduino Mighty Core für ATmega32/644/1284 https://github.com/MCUdude/MightyCore
 
 
 ## Links
 
-* https://www.heise.de/ct/artikel/c-t-Bot-und-c-t-Sim-284119.html
-* https://www.heise.de/ct/projekte/machmit/ctbot/wiki C't-Bot Wiki
+* https://www.heise.de/ct/artikel/c-t-Bot-und-c-t-Sim-284119.html c't-Bot und c't Sim
+* https://www.heise.de/ct/projekte/machmit/ctbot/wiki c't-Bot Wiki
 * http://ctbot.de/ inoffizielles c't-Bot Fan Forum
 
 
