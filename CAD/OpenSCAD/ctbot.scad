@@ -1,4 +1,3 @@
-use <prism.scad>
 $fn=100;
 r=1.6;
 
@@ -122,9 +121,9 @@ module ctbot() {
     translate([0,-41,19]) rotate([-90,0,0]) motormount();
 }
 
-ctbot();
+!ctbot();
 base();
 top();
 motormount();
 connector();
-!wheel();
+wheel();
