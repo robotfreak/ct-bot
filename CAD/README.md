@@ -16,20 +16,21 @@ Benötigt werden dazu nur die Dateien aus dem CAD/STL Ordner. Die 3D Design File
 ## OpenSCAD STL Files
 
 * ctbot-base.stl 1 x Untere Trägerplatte
-* ctbot-top.stl 1 x Obere Trägerplatte
+* ctbot-top.stl optional 1 x Obere Trägerplatte (bei Verwendung eigener Elektronik)
 * ctbot-connector.stl 3 x Verbinder
 * ctbot-motormount.stl 2 x Motorhalterung
 * ctbot-wheel.stl 2 x Räder
+* ctbot-support.stl 2 x Räder
 * ctbot.stl Komplettansicht, nur zur Darstellung
 
 ## Druckeinstellungen
 
 * 0.2mm Layerdicke
-* 30% Infill, Räder 100% Infill
+* 100% Infill
 
 ## Weitere benötigte Bauteile
 
-* 2 x O-Ringe 50mm 3mm Durchmesser
+* 2 x O-Ringe 5mm, 46mm Innendurchmesser 56mm Aussendurchmesser
 * 1 x Stützrad
 * 2 x Original Motoren Faulhaber
 

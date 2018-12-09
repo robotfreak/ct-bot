@@ -2,12 +2,13 @@ $fn=100;
 r=1.6;
 
 module base() {
-    linear_extrude(2) {
+    difference() {
+    linear_extrude(2.5) {
         difference() {
             circle(60);
             // Front Klappe
             translate([-40,0,0]) square(50, center=true);
-            translate([-11,0,0]) square([8,17], center=true);
+            //translate([-11,0,0]) square([8,17], center=true);
             // Radschlitze
             translate([-25,45,0]) square([50,7]);
             translate([-25,-52,0]) square([50,7]);
@@ -16,13 +17,13 @@ module base() {
             translate([14.5,34.5,0]) circle(r);
             translate([14.5,-34.5,0]) circle(r);
             // Klippensensor
-            translate([-38.42,30.42,0]) square(8, center=true);
-            translate([-38.42,-30.42,0]) square(8, center=true);
+            translate([-38.42,36.42,0]) square(8, center=true);
+            translate([-38.42,-36.42,0]) square(8, center=true);
             // Maussensor
-            translate([5,0,0]) square([6,16], center=true);
-            translate([8,-18.9,0]) square([18,33.9]);
-            translate([29,0,0]) square([6,16], center=true);
-            translate([32,-21.4,0]) square([18,40.07]);
+            translate([23,0,0]) square([46,16], center=true);
+            //translate([8,-15,0]) square([18,30]);
+            //translate([29,0,0]) square([6,16], center=true);
+            translate([32,-18,0]) square([14,10]);
             translate([5,12,0]) circle(r);
             translate([5,-12,0]) circle(r);
             translate([29,12,0]) circle(r);
@@ -38,18 +39,35 @@ module base() {
             translate([38,-38,0]) circle(r);
         }
     }
+    translate([54,0,0]) cylinder(r=10,h=1);
+    }
 }
 
 module top() {
-    linear_extrude(2) {
+    linear_extrude(2.5) {
         difference() {
             circle(60);
+            // Front Klappe
+            translate([-40,0,0]) square(50, center=true);
+            // Servo
+            translate([5,0,0]) square([22,12.5], center=true);
+            translate([-9,0,0]) circle(r);
+            translate([19,0,0]) circle(r);
+            // Kabel Schlitze
+            translate([-35,-45,0]) square([5,12], center=true);
+            translate([-35,45,0]) square([5,12], center=true);
+            translate([55,0,0]) square([10,5], center=true);
+            // LCD Bohrungen
+            translate([27.5,46.6,0]) circle(r);
+            translate([27.5,-46.6,0]) circle(r);
+            translate([-27.5,46.6,0]) circle(r);
+            translate([-27.5,-46.6,0]) circle(r);
             // Bohrungen
             translate([-48.48,28.72,0]) circle(r);
             translate([-48.48,-28.72,0]) circle(r);
             translate([0,56,0]) circle(r);
             translate([0,-56,0]) circle(r);
-            translate([54,0,0]) circle(r);
+            //translate([54,0,0]) circle(r);
             translate([-29.55,32,0]) circle(r);
             translate([-29.55,-32,0]) circle(r);
             translate([38,-38,0]) circle(r);
@@ -108,22 +126,43 @@ module motormount() {
         translate([14.5,2,0]) rotate([90,0,0]) cylinder(d=3.2, h=4);
     }
 }
-        
-module ctbot() {
-    translate([0,0,0]) base();
-    translate([0,0,62]) top();
-    translate([-29.55,32,32]) connector();
-    translate([-29.55,-32,32]) connector();
-    translate([38,-38,32]) connector();
-    translate([0,51,19]) rotate([90,0,0]) wheel();
-    translate([0,-51,19]) rotate([-90,0,0]) wheel();
-    translate([0,41,19]) rotate([-90,0,180]) motormount();
-    translate([0,-41,19]) rotate([-90,0,0]) motormount();
+
+module support() {
+    difference() {
+        union() {
+            cylinder(r=5,h=5);
+            translate([0,0,5]) sphere(r=5);
+        }
+        cylinder(r=1,h=5);
+    }
 }
 
-!ctbot();
+module pneu() {
+    rotate_extrude(convexity = 10, $fn = 100)
+    translate([25, 0, 0]) circle(r = 2.5, $fn = 100);
+
+}
+
+module ctbot() {
+    color("silver") translate([0,0,0]) base();
+    color("green") translate([0,0,62]) top();
+    color("silver") translate([-29.55,32,32]) connector();
+    color("silver") translate([-29.55,-32,32]) connector();
+    color("silver") translate([38,-38,32]) connector();
+    color("white") translate([0,51,19]) rotate([90,0,0]) wheel();
+    color("white") translate([0,-51,19]) rotate([-90,0,0]) wheel();
+    color("black") translate([0,48.5,19]) rotate([90,0,0]) pneu();
+    color("black") translate([0,-48.5,19]) rotate([-90,0,0]) pneu();
+    color("silver") translate([0,41,19]) rotate([-90,0,180]) motormount();
+    color("silver") translate([0,-41,19]) rotate([-90,0,0]) motormount();
+    color("white") translate([54,0,0]) rotate([180,0,0]) support(); 
+}
+
+ctbot();
 base();
-top();
+!top();
 motormount();
 connector();
 wheel();
+support();
+pneu();
