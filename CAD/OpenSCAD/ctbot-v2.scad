@@ -81,6 +81,32 @@ module top() {
     }
 }
 
+module crickit_cutout() {
+    translate([37.5,16,0]) circle(rm3);
+    translate([37.5,-16,0]) circle(rm3);
+    translate([-37.5,16,0]) circle(rm3);
+    translate([-37.5,-16,0]) circle(rm3);
+}
+
+module crickit_standoff() {
+    translate(([37.5,16,0])) difference() {
+        cylinder(h=6, r=3);
+        cylinder(r=rm3, h=10);
+    }
+    translate(([37.5,-16,0])) difference() {
+        cylinder(h=6, r=3);
+        cylinder(r=rm3, h=10);
+    }
+    translate(([-37.5,16,0])) difference() {
+        cylinder(h=6, r=3);
+        cylinder(r=rm3, h=10);
+    }
+    translate(([-37.5,-16,0])) difference() {
+        cylinder(h=6, r=3);
+        cylinder(r=rm3, h=10);
+    }
+}
+
 module base_v2() {
     difference() {
     linear_extrude(2.5) {
@@ -91,10 +117,7 @@ module base_v2() {
             translate([0,52,0]) square([50,20], center = true);
             translate([0,-52,0]) square([50,20], center = true);
             // Crickit Bohrungen
-            translate([37.5,16,0]) circle(rm3);
-            translate([37.5,-16,0]) circle(rm3);
-            translate([-37.5,16,0]) circle(rm3);
-            translate([-37.5,-16,0]) circle(rm3);
+            crickit_cutout();
             // Motor Mount Bohrungen
             translate([-14.5,34.5,0]) circle(rm3);
             translate([-14.5,-34.5,0]) circle(rm3);
@@ -125,16 +148,13 @@ module top_v2() {
     linear_extrude(2.5) {
         difference() {
             circle(60);
-            square([30,20], center=true);
+            square([42,42], center=true);
             // Kabel Schlitze
             //translate([-35,-45,0]) square([5,12], center=true);
             //translate([-35,45,0]) square([5,12], center=true);
             //translate([55,0,0]) square([10,5], center=true);
             // Crickit Bohrungen
-            translate([37.5,16,0]) circle(rm3);
-            translate([37.5,-16,0]) circle(rm3);
-            translate([-37.5,16,0]) circle(rm3);
-            translate([-37.5,-16,0]) circle(rm3);
+            crickit_cutout();
             //translate([16,37.5,0]) circle(rm3);
             //translate([-16,37.5,0]) circle(rm3);
             //translate([16,-37.5,0]) circle(rm3);
@@ -175,6 +195,7 @@ module top_v2() {
             //translate([38,-38,0]) circle(rm3);
         }
     }
+    crickit_standoff();
 }
 
 module connector() {
@@ -350,16 +371,19 @@ module sensor_mount_connector() {
     translate([-28.72,0,1.5]) m25_nutmount();
 }
 
+module mouth() {
+}
+
 module sensor_mount() {
     difference() {
         cube([52,60,2.5], center=true);
         translate([0,15,0]) ultrasonic_cutout(); 
-        translate([0,-12,0]) thermogrid_cutout();
+        translate([0,-12,0]) rotate([0,0,-90]) thermogrid_cutout();
     }
     translate([0,-28.5,-4]) rotate([-90,0,0]) sensor_mount_connector();
     translate([0,28.5,-4]) rotate([90,0,0]) sensor_mount_connector();
     translate([0,15,-7.25]) ultrasonic_standoff();
-    translate([0,-12,-4.25]) thermogrid_standoff();
+    translate([0,-12,-4.25]) rotate([0,0,-90])thermogrid_standoff();
    
 }
 
