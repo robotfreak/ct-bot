@@ -2,6 +2,7 @@ version = "v2"; // [v1: Version 1, v2: Version 2]
 show_part = "all"; // [all: All Parts, top: Top Plate, base: Base Plate, connector: Connector, sensor_mount: Sensor Mount, wheel: Wheel, motor_mount: Motor Mount, support: Support Wheel, pneu: Pneu]
 side_servo = false;
 side_sensor = true;
+wheel_type = "48mm"; // [48mm: 48mm, 55mm: 55mm]
 /* [Hidden] */
 $fn=100;
 rm3=1.6;
@@ -209,15 +210,22 @@ module connector() {
     }
 }
 
-module wheel() {
+module wheel48() {
+    difference() {
+            cylinder(r=24,h=20);
+            cylinder(r=1.6,h=20);
+    }
+}
+
+module wheel(dia=25) {
     difference() {
         union() {
-            cylinder(r1=25,r2=23,h=2.5);
-            translate([0,0,2.5]) cylinder(r1=23,r2=25,h=2.5);
+            cylinder(r1=dia,r2=dia-2,h=2.5);
+            translate([0,0,2.5]) cylinder(r1=dia-2,r2=dia,h=2.5);
             translate([0,0,5]) cylinder(r=5,h=5);
             for(i=[0:30]) {
                 rotate([0,0,i*360/30]) {
-                    translate([0,23,5.25]) cube([2.5,4,0.5], center=true);
+                    translate([0,dia-2,5.25]) cube([2.5,4,0.5], center=true);
 //                    translate([0,21,5.25]) prism(2.5,4,0.5);
 
                 }
@@ -225,10 +233,29 @@ module wheel() {
         }
         for(i=[0:6]) {
             rotate([0,0,i*360/6]) {
-                translate([0,15,0]) cylinder(d=12,h=5);
+                translate([0,dia-10,0]) cylinder(d=dia/2-1,h=5);
             }
         }
-        cylinder(r=1.5,h=10);
+        cylinder(r=1.6,h=10);
+    }
+    if (wheel_type == "48mm") {
+        translate([-2.8,0,5]) cube([3.2,3.2,10], center=true);
+    }
+}
+
+!motordummy();
+module motordummy() {
+    difference() {
+        union() {
+            translate([0,0,3]) cylinder(d=11.6, h=2);
+            translate([0,0,0]) cylinder(d=24, h=3);
+        }
+        for(i=[0:3]) {
+            rotate([0,0,i*360/3]) {
+                translate([0,-8.5,0]) cylinder(d=2,h=2);
+            }
+        }
+        cylinder(r=1.6,h=10);
     }
 }
 
@@ -257,15 +284,17 @@ module m25_nutmount() {
     }
 }
 
-module motormount_connector() {
+module motormount_connector(nutmount=true) {
     difference() {
         cube([44,13,3], center=true);
         translate([-14.5,1,0]) cylinder(r=rm3, h=4, center=true);
         translate([14.5,1,0]) cylinder(r=rm3, h=4, center=true);
     }
     translate([-22,6.5,0]) rotate([45,0,0]) cube([44,2,2]);
-    translate([-14.5,1,1.5]) m25_nutmount();
-    translate([14.5,1,1.5]) m25_nutmount();
+    if (nutmount == true) {
+        translate([-14.5,1,1.5]) m25_nutmount();
+        translate([14.5,1,1.5]) m25_nutmount();
+    }
 }
 
 module motor_cutout() {
@@ -296,7 +325,71 @@ module side_sensor_cutout() {
     translate([-9.5,0,0]) cylinder(r=rm3, h=4, center=true);
 }
 
-module motormount_v2(left = true) {
+//!motorclamp();
+
+module motorclamp() {
+    translate([0,4.5,0]) difference() {
+        cube([18.7,9.35,12], center=true);
+        translate([0,-5,0]) intersection() {
+            cube([13,11,12], center=true);
+            cylinder(d=13, h=12, center=true);
+        }
+    
+    }
+    translate([-20.7/2,0,0]) cube([2,18.5,12], center=true);
+    translate([20.7/2,0,0]) cube([2,18.5,12], center=true);
+    translate([0,-8.5, 0]) difference() {
+        cube([44,2,12], center=true);
+        cube([18.7,2,12], center=true);
+        translate([-14.5,0,1]) rotate([90,0,0]) cylinder(r=rm3, h=4, center=true, $fn=30);
+        translate([14.5,0,1]) rotate([90,0,0]) cylinder(r=rm3, h=4, center=true, $fn=30);
+    }
+    rotate([90,0,0]) { 
+        translate([-14.5,1,5.5]) m25_nutmount();
+        translate([14.5,1,5.5]) m25_nutmount();
+    }
+}
+
+//!motorclamp2();
+
+module motorclamp2() {
+    translate([0,5,7.5]) difference() {
+        cube([18.5,9.35,12], center=true);
+        translate([0,-5,0]) intersection() {
+            cube([13,11,12], center=true);
+            cylinder(d=13, h=12, center=true);
+        }
+    
+    } 
+}
+
+module motormount48(left = true) {
+    difference() {
+        translate([0,-17.5,0]) cube([44,60,3], center=true);
+        cube([13,11,3], center=true);
+
+        if (side_servo == true) {
+            translate([0,-32,0]) side_servo_cutout();
+        }
+        else if (side_sensor == true) {
+            translate([0,-32,0]) side_sensor_cutout();
+        }
+    }
+    translate([0,11,7.5]) rotate([-90,0,180]) motormount_connector(false);
+    translate([0,-46,7.5]) rotate([-90,0,0]) motormount_connector();
+}
+
+/*
+translate([0,100,0]) difference() {
+    intersection() {
+        cube([12,10,12], center=true);
+        cylinder(d=12, h=12, center=true);
+    }
+    //cube([10,12,12], center=true); 
+}
+*/
+
+module motormount55(left = true) {
     difference() {
         translate([0,-14,0]) cube([44,60,3], center=true);
         motor_cutout();
@@ -314,6 +407,7 @@ module motormount_v2(left = true) {
         translate([0,0,0]) cylinder(d=26, h=4);
     }
     translate([0,-42.5,7.5]) rotate([-90,0,0]) motormount_connector();
+    
 }
 
 module ultrasonic_cutout() { 
@@ -398,9 +492,9 @@ module support(siz=5) {
     }
 }
 
-module pneu() {
+module pneu(dia=25) {
     rotate_extrude(convexity = 10, $fn = 100)
-    translate([25, 0, 0]) circle(r = 2.5, $fn = 100);
+    translate([dia, 0, 0]) circle(r = 2.5, $fn = 100);
 
 }
 
@@ -419,8 +513,8 @@ module ctbot() {
     color("silver") translate([-29.55,32,33]) connector();
     color("silver") translate([-29.55,-32,33]) connector();
     color("silver") translate([38,-38,33]) connector();
-    color("white") translate([0,51,19]) rotate([90,0,0]) wheel();
-    color("white") translate([0,-51,19]) rotate([-90,0,0]) wheel();
+    color("white") translate([0,51,19]) rotate([90,0,0]) wheel(25);
+    color("white") translate([0,-51,19]) rotate([-90,0,0]) wheel(25);
     color("black") translate([0,48.5,19]) rotate([90,0,0]) pneu();
     color("black") translate([0,-48.5,19]) rotate([-90,0,0]) pneu();
     color("silver") translate([0,41,19]) rotate([-90,0,180]) motormount();
@@ -435,12 +529,22 @@ module ctbot_v2() {
     //color("silver") translate([-29.55,-32,32]) connector();
     //color("silver") translate([38,-38,32]) connector();
     color("red") translate([-45,0,-4]) line_sensor();
-    color("white") translate([0,51,19]) rotate([90,0,0]) wheel();
-    color("white") translate([0,-51,19]) rotate([-90,0,0]) wheel();
-    color("black") translate([0,48.5,19]) rotate([90,0,0]) pneu();
-    color("black") translate([0,-48.5,19]) rotate([-90,0,0]) pneu();
-    color("silver") translate([0,41,19]) rotate([-90,0,180]) motormount_v2();
-    color("silver") translate([0,-41,19]) rotate([-90,0,0]) motormount_v2(left=false);
+    if (wheel_type == "48mm") {
+        color("white") translate([0,51,15.5]) rotate([90,0,0]) wheel(21.5);
+        color("white") translate([0,-51,15.5]) rotate([-90,0,0]) wheel(21.5);
+        color("black") translate([0,48.5,15.5]) rotate([90,0,0]) pneu(21.5);
+        color("black") translate([0,-48.5,15.5]) rotate([-90,0,0]) pneu(21.5);
+        color("silver") translate([0,41,19]) rotate([-90,0,180]) motormount48();
+        color("silver") translate([0,-41,19]) rotate([-90,0,0]) motormount48(left=false);
+    }
+    else {
+        color("white") translate([0,51,19]) rotate([90,0,0]) wheel(25);
+        color("white") translate([0,-51,19]) rotate([-90,0,0]) wheel(25);
+        color("black") translate([0,48.5,19]) rotate([90,0,0]) pneu();
+        color("black") translate([0,-48.5,19]) rotate([-90,0,0]) pneu();
+        color("silver") translate([0,41,19]) rotate([-90,0,180]) motormount55();
+        color("silver") translate([0,-41,19]) rotate([-90,0,0]) motormount55(left=false);
+    }
     color("white") translate([54,0,0]) rotate([180,0,0]) support(4.5); 
     color("white") translate([-53,0,33]) rotate([90,0,-90]) sensor_mount();
 
@@ -475,7 +579,12 @@ else if (show_part == "motor_mount") {
         motormount();
     }
     else if (version == "v2") {
-        motormount_v2();
+        if (wheel_type == "55mm") {
+            motormount55();
+        }
+        else if (wheel_type == "48mm") {
+            motormount48();
+        }
     }
 }
 else if (show_part == "sensor_mount") {
@@ -485,7 +594,12 @@ else if (show_part == "connector") {
     connector();
 }
 else if (show_part == "wheel") {
-    wheel();
+    if (wheel_type == "55mm") {
+        wheel(25);
+    }
+    if (wheel_type == "48mm") {
+        wheel(21.5);
+    }
 }
 else if (show_part == "support") {
     if (version == "v1") {
